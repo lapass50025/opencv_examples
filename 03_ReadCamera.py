@@ -22,7 +22,9 @@ while cap.isOpened():
     keydata = cv.waitKey(1)
     if keydata == ord('q'):
         break
-    
+    # ESC
+    elif keydata == 27:
+        break    
 
 # 카메라 해제하기
 if cap.isOpened():
