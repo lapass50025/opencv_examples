@@ -28,5 +28,6 @@ while cap.isOpened():
 
 # 카메라 해제하기
 if cap.isOpened():
+    cv.destroyAllWindows()
     cap.release()
 
