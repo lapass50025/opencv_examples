@@ -12,9 +12,13 @@ import os
 # 빈 이미지 보기
 def show_blank():
     # 빈 윈도우 생성하기
-    data = np.zeros((640, 480, 3))
-    data[:] = 255
-    cv.imshow("TITLE", data)
+    img = np.zeros((480, 640, 3))
+    img[:] = 255
+
+    # 글자 출력
+    cv.putText(img, " q: end, i : image, v : video, w : webcam", (10, 240), cv.FONT_HERSHEY_COMPLEX, 0.8, (0, 0, 0), 2)
+
+    cv.imshow("TITLE", img)
 
 # 이미지 보기
 def show_image():
@@ -27,9 +31,11 @@ def show_image():
     # 이미지 출력하기
     cv.imshow("TITLE", img)
 
-    # 대기하기
-    cv.waitKey(0)
-    show_blank()
+    # 키 처리하기
+    while True:
+        keydata = cv.waitKey(1)
+        if keydata == ord('q'):
+            break
 
 # 동영상 보기
 def show_movie():
