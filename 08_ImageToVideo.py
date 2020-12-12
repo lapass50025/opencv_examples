@@ -16,7 +16,13 @@ img = cv.imread(strfile)
 height, width, channel = img.shape
 stravi = strdir + "/output.avi"
 
-fourcc = cv.VideoWriter_fourcc(*'DIVX')
+# MP4 형식으로 저장하기
+# fourcc = cv.VideoWriter_fourcc(*"FMP4")
+
+# DIVX 형식으로 저장하기
+# fourcc = cv.VideoWriter_fourcc('D', 'I', 'V', 'X')
+fourcc = cv.VideoWriter_fourcc(*"DIVX")
+
 
 # tuple 데이터형
 size = (width, height)
