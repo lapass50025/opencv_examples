@@ -25,6 +25,8 @@ cv.imshow(strtitle, img_resized)
 
 # 크롭 해보기
 # X, Y (행 row, 열 col 순서이므로 세로, 가로 순서)
+# 행 200 ~ 399
+# 열 0 ~ 999
 img_crop = img_resized[200:400, 0:1000]
 width = img_crop .shape[1]
 height = img_crop .shape[0]
