@@ -26,13 +26,14 @@ kernel = np.ones((5, 5), np.uint8)
 img_erode = cv.erode(img_dilate, kernel, iterations=1)
 
 # 출력하기
-strtitle = "gray, gaussian blur, canny"
+img_blank = img_gray.copy()
+img_blank[:] = 255
+strtitle = "gray, gaussian blur, canny, dilate, erode"
 img_1 = np.hstack((img_gray, img_gaussian, img_canny))
-cv.imshow(strtitle, img_1)
+img_2 = np.hstack((img_dilate, img_erode, img_blank))
 
-strtitle = "dilate, erode"
-img_2 = np.hstack((img_dilate, img_erode))
-cv.imshow(strtitle, img_2)
+img_3 = np.vstack((img_1, img_2))
+cv.imshow(strtitle, img_3)
 
 cv.waitKey(0)
 cv.destroyAllWindows()
