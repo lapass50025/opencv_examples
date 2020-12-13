@@ -11,6 +11,12 @@ strfile = os.getcwd() + "/kor_crop.png"
 img = cv.imread(strfile)
 img_gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
+# threshold 적용하기
+img_threshold = cv.threshold(img_gray, 50, 255, cv.THRESH_BINARY+cv.THRESH_OTSU)[1]
+
+cv.imshow("GRAY", img_gray)
+cv.imshow("THRESHOLD", img_threshold)
+
 # 글자 얻기
 custom_config = '--oem 3 -l kor+kor_vert+eng --psm 6'
 str_result = pytesseract.image_to_string(img_gray, config=custom_config)
