@@ -9,14 +9,15 @@ import sys
 # 이미지 데이터 불러오기
 strfile = os.getcwd() + "/kor_crop.png"
 img = cv.imread(strfile)
+img_gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
 # 글자 얻기
 custom_config = '--oem 3 -l kor+kor_vert+eng --psm 6'
-str_result = pytesseract.image_to_string(img, config=custom_config)
+str_result = pytesseract.image_to_string(img_gray, config=custom_config)
 print(str_result)
 
 # 글자 좌표 얻기
-dict_result = pytesseract.image_to_data(img, config=custom_config, output_type=Output.DICT)
+dict_result = pytesseract.image_to_data(img_gray, config=custom_config, output_type=Output.DICT)
 
 for i, strtext in enumerate(dict_result['text']):
     x = dict_result['left'][i]
