@@ -4,6 +4,7 @@ import os
 import requests
 from urllib import parse
 import wget
+from PIL import Image
 
 strurl = "http://image-net.org/api/text/imagenet.synset.geturls?wnid=n02114548"
 
@@ -34,14 +35,21 @@ def save_images():
                 print("url : ", url, "file : ", image_file)
                 result = os.system("curl --connect-timeout 10 --max-time 10 " + url + " -o " + image_name)
                 if result == 0:
+                    # 이미지 파일 열기
+                    Image.open(image_name)
+
                     i = i + 1
                     print("다운로드 파일 : {}, 총 개수 : {}".format(i, total_count))
                 else:
                     total_count = total_count - 1
+                    if os.path.exists(image_name):
+                        os.remove(image_name)
             else:
                 total_count = total_count - 1
                 
         except Exception as e:
+            if os.path.exists(image_name):
+                os.remove(image_name)
             total_count = total_count - 1
             print(e)
             
