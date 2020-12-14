@@ -32,10 +32,12 @@ def save_images():
                 
                 # 다운로드하기
                 print("url : ", url, "file : ", image_file)
-                os.system("curl --connect-timeout 10 --max-time 10 " + url + " -o " + image_name)
-                
-                i = i + 1
-                print("다운로드 파일 : {}, 총 개수 : {}".format(i, total_count))
+                result = os.system("curl --connect-timeout 10 --max-time 10 " + url + " -o " + image_name)
+                if result == 0:
+                    i = i + 1
+                    print("다운로드 파일 : {}, 총 개수 : {}".format(i, total_count))
+                else:
+                    total_count = total_count - 1
             else:
                 total_count = total_count - 1
                 
