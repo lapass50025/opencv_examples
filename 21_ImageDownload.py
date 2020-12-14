@@ -5,6 +5,7 @@ import requests
 from urllib import parse
 import wget
 from PIL import Image
+import time
 
 strurl = "http://image-net.org/api/text/imagenet.synset.geturls?wnid=n02114548"
 
@@ -46,6 +47,8 @@ def save_images():
                         os.remove(image_name)
             else:
                 total_count = total_count - 1
+            
+            time.sleep(1)
                 
         except Exception as e:
             if os.path.exists(image_name):
