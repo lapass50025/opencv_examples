@@ -26,7 +26,7 @@ def DrawPoloygon(img_data, color, thickness, *pts):
 
 
 # 이미지 불러오기
-strfile = os.getcwd() + "/car_plate.jpg"
+strfile = os.getcwd() + "/car_plate.png"
 img = cv.imread(strfile)
 
 # 다각형 그리기
@@ -37,7 +37,6 @@ cv.imshow("TITLE", img)
 cv.waitKey(0)
 
 # 깨끗한 이미지 읽기
-strfile = os.getcwd() + "/car_plate.jpg"
 img = cv.imread(strfile)
 
 # 원근법 이미지 변환하기
