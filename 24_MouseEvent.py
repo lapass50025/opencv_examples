@@ -14,18 +14,20 @@ button_status = False
 def mouse_event(event, x, y, flags, param):
     global mouse_x, mouse_y, button_status
 
-    # 왼쪽 마우스 버튼
+    # 왼쪽 마우스 버튼 DOWN 이벤트
     if event == cv.EVENT_LBUTTONDOWN:
         button_status = True
         mouse_x = x
         mouse_y = y
 
+    # 마우스 이동 이벤트
     elif event == cv.EVENT_MOUSEMOVE:
         if button_status == True:
             img_copy = np.copy(img)
             cv.rectangle(img_copy, (mouse_x, mouse_y), (x, y), (0, 255, 0), 0)
             cv.imshow("TITLE", img_copy)
 
+    # 마우스 왼쪽 버튼 UP 이벤트
     elif event == cv.EVENT_LBUTTONUP:
         button_status = False
         cv.rectangle(img, (mouse_x, mouse_y), (x, y), (0, 255, 0), -1)
