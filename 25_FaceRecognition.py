@@ -69,10 +69,10 @@ def GetFrontFaceDetect(img_data):
 
 # 얼굴 이미지 전처리하기
 # train, label 데이터 만들기
-def MakeTrainAndLabel(list_train, list_label):
-    # faces 디렉터리에서 이미지 파일 리스트 만들기
-    strdir = os.getcwd() + "/faces"
-    files = [file for file in os.listdir(strdir) if os.path.isfile(strdir + "/" + file) ]
+def MakeTrainAndLabel(strdir, list_train, list_label, width, height):
+    # 이미지 파일 리스트 만들기
+    dir_list = os.listdir(strdir)
+    files = [file for file in dir_list if os.path.isfile(strdir + "/" + file) ]
 
     for i, file in enumerate(files):
         strfile = strdir + "/" + file
@@ -86,7 +86,7 @@ def MakeTrainAndLabel(list_train, list_label):
             img_crop = img[y:y+h, x:x+w]
 
             # 200 x 200 크기 변경하기
-            img_resize = cv.resize(img_crop, (200, 200))
+            img_resize = cv.resize(img_crop, (width, height))
 
             # 테스트 출력해보기
             if False:
@@ -99,7 +99,7 @@ def MakeTrainAndLabel(list_train, list_label):
             print("{} 번째".format(i))
 
 # 훈련하기
-def TrainFace(list_train, list_label):
+def TrainFaceRecognition(list_train, list_label):
     # numpy array로 변환하기
     train_data = np.asarray(list_train)
     label_data = np.asarray(list_label, dtype=np.int32)
@@ -107,22 +107,47 @@ def TrainFace(list_train, list_label):
     # 모델 생성하기
     model = cv.face.LBPHFaceRecognizer_create()
 
-    # 훈련시키기
     model.train(train_data, label_data)
 
     return model
 
+# 훈련 결과 테스트하기
+def TestResult(model, strfile, width, height):
+    # 테스트 할  파일 읽기
+    img_test = cv.imread(strfile, cv.IMREAD_GRAYSCALE)
+
+    # 얼굴 영역 얻기
+    faces = GetFrontFaceDetect(img_test)
+    count_face = len(faces)
+    if count_face:
+        (x, y, w, h) = faces[0]
+        img_crop = img_test[y:y+h, x:x+w]
+
+        # 200 x 200 크기 변경하기
+        img_resize = cv.resize(img_crop, (width, height))
+        cv.imshow("TITLE", img_resize)
+        cv.waitKey(0)
+
+        # 비교하기
+        id, predict_result = model.predict(img_resize)
+        print("테스트 결과 : ", predict_result)
+        print("ID : ", id)
+
 # 
 if __name__ == "__main__":
-    # 저장하기
-    RecordVideo(0)
+    # 카메라 이미지 ./faces 디렉터리에 저장하기
+    # RecordVideo(0)
 
     # 훈련 데이터 전처리하기 (얼굴 크롭, 크기 200x200 변환하기)
     train = list()
     label = list()
 
-    MakeTrainAndLabel(train, label)
+    strdir = os.getcwd() + "/faces"
+    MakeTrainAndLabel(strdir, train, label, 200, 200)
 
     # 훈련하기
-    model = TrainFace(train, label)
-    
+    model = TrainFaceRecognition(train, label)
+   
+    # 훈련 결과 테스트하기
+    strfile = os.getcwd() + "/faces/0100.png"
+    TestResult(model, strfile, 200, 200)
