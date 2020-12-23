@@ -5,6 +5,7 @@ import cv2 as cv
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+import glob
 
 # 카메라에서 이미지 읽고 ./faces 디렉터리에 저장하기
 # s : save
@@ -71,12 +72,11 @@ def GetFrontFaceDetect(img_data):
 # train, label 데이터 만들기
 def MakeTrainAndLabel(strdir, list_train, list_label, width, height):
     # 이미지 파일 리스트 만들기
-    dir_list = os.listdir(strdir)
-    files = [file for file in dir_list if os.path.isfile(strdir + "/" + file) ]
+    strsearch = strdir + "/*.png"
+    files = glob.glob(strsearch)
 
     for i, file in enumerate(files):
-        strfile = strdir + "/" + file
-        img = cv.imread(strfile, cv.IMREAD_GRAYSCALE)
+        img = cv.imread(file, cv.IMREAD_GRAYSCALE)
 
         # 얼굴 크롭 후 학습 데이터 얻기
         faces = GetFrontFaceDetect(img)
@@ -135,19 +135,34 @@ def TestResult(model, strfile, width, height):
 
 # 
 if __name__ == "__main__":
-    # 카메라 이미지 ./faces 디렉터리에 저장하기
-    # RecordVideo(0)
-
-    # 훈련 데이터 전처리하기 (얼굴 크롭, 크기 200x200 변환하기)
-    train = list()
-    label = list()
-
     strdir = os.getcwd() + "/faces"
-    MakeTrainAndLabel(strdir, train, label, 200, 200)
 
-    # 훈련하기
-    model = TrainFaceRecognition(train, label)
+    # 훈련 데이터 불러오기
+    strfile = strdir + "/face_recognition.yml"
+    if os.path.exists(strfile):
+            model = cv.face.LBPHFaceRecognizer_create()
+            model.read(strfile)
+            
+    else:
+        # 카메라 이미지 ./faces 디렉터리에 저장하기
+        # RecordVideo(0)
+
+        # 훈련 데이터 전처리하기 (얼굴 크롭, 크기 200x200 변환하기)
+        train = list()
+        label = list()
+
+        MakeTrainAndLabel(strdir, train, label, 200, 200)
+
+        # 훈련하기
+        model = TrainFaceRecognition(train, label)
+
+        # 훈련 데이터 저장하기
+        strfile = strdir + "/face_recognition.yml"
+        model.save(strfile)
    
     # 훈련 결과 테스트하기
-    strfile = os.getcwd() + "/faces/0100.png"
+    strfile = strdir + "/0100.png"
+    TestResult(model, strfile, 200, 200)
+
+    strfile = strdir + "/test01.jpg"
     TestResult(model, strfile, 200, 200)
